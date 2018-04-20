@@ -16,8 +16,8 @@ public enum TimeUtil {
     private static final ThreadLocal<SimpleDateFormat> FORMATTER_MILLIS = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
-            SimpleDateFormat dateDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            dateDF.setTimeZone(TimeZone.getTimeZone("UTC"));
+            SimpleDateFormat dateDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+         //   dateDF.setTimeZone(TimeZone.getTimeZone("UTC"));
             return dateDF;
         }
     };

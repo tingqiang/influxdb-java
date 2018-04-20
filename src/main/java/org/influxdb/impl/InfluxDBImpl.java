@@ -1,36 +1,6 @@
 package org.influxdb.impl;
 
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
-import okhttp3.logging.HttpLoggingInterceptor.Level;
-import okio.BufferedSource;
-
-import org.influxdb.BatchOptions;
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBException;
-import org.influxdb.InfluxDBIOException;
-import org.influxdb.dto.BatchPoints;
-import org.influxdb.dto.BoundParameterQuery;
-import org.influxdb.dto.Point;
-import org.influxdb.dto.Pong;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
-import org.influxdb.impl.BatchProcessor.HttpBatchEntry;
-import org.influxdb.impl.BatchProcessor.UdpBatchEntry;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.moshi.MoshiConverterFactory;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -48,6 +18,37 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+
+import org.influxdb.BatchOptions;
+import org.influxdb.InfluxDB;
+import org.influxdb.InfluxDBException;
+import org.influxdb.InfluxDBIOException;
+import org.influxdb.dto.BatchPoints;
+import org.influxdb.dto.BoundParameterQuery;
+import org.influxdb.dto.Point;
+import org.influxdb.dto.Pong;
+import org.influxdb.dto.Query;
+import org.influxdb.dto.QueryResult;
+import org.influxdb.impl.BatchProcessor.HttpBatchEntry;
+import org.influxdb.impl.BatchProcessor.UdpBatchEntry;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+
+import okhttp3.Headers;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor.Level;
+import okio.BufferedSource;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 /**
  * Implementation of a InluxDB API.
@@ -81,7 +82,18 @@ public class InfluxDBImpl implements InfluxDB {
 
   public InfluxDBImpl(final String url, final String username, final String password,
       final OkHttpClient.Builder client) {
+	  
+	  //connectTimeout(60, TimeUnit.SECONDS).
+      //readTimeout(60, TimeUnit.SECONDS).
+      //writeTimeout(60, TimeUnit.SECONDS)
+	  
+	  
     super();
+    
+	  client.connectTimeout(300, TimeUnit.SECONDS);
+	  client.readTimeout(300, TimeUnit.SECONDS);
+	  client.writeTimeout(300, TimeUnit.SECONDS);
+    
     Moshi moshi = new Moshi.Builder().build();
     this.hostAddress = parseHostAddress(url);
     this.username = username;
